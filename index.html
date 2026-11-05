@@ -123,7 +123,6 @@ header h1{font-size:clamp(34px,6vw,52px);font-weight:750;letter-spacing:-1.4px;m
 .header-rule span{display:block;width:28px;height:3px;background:#79c5ca;margin:auto;border-radius:9px}
 .panel{border-radius:18px;padding:clamp(20px,4vw,34px);box-shadow:0 12px 36px rgba(17,39,68,.07);border-color:#e3eaf2}
 .section-heading{text-align:center;margin:0 auto 25px;max-width:620px}
-.section-heading .section-index{display:inline-flex;align-items:center;justify-content:center;width:29px;height:29px;border-radius:50%;background:#e9f1f8;color:#28577f;font-size:11px;font-weight:850;margin-bottom:10px}
 .section-heading h2{font-size:clamp(23px,3vw,29px);font-weight:800;letter-spacing:-.5px;margin:0;color:#172d48}
 .section-heading p{margin:6px 0 0;color:#7b8999;font-size:13px}
 .section-heading.compact{margin-bottom:23px;padding-bottom:20px;border-bottom:1px solid #e8edf3}
@@ -151,7 +150,7 @@ footer{border-top:1px solid #e1e8f0;background:#f8fafc}
 <header><div class="header-inner"><div class="header-kicker">PROFESSIONAL KNOWLEDGE EVALUATION</div><h1>Assessment Test</h1><div class="header-rule"><span></span></div></div></header>
 <main class="wrap">
 <section id="setup" class="panel">
-<div class="section-heading"><span class="section-index">01</span><h2>Candidate Information</h2><p>পরীক্ষার্থীর প্রয়োজনীয় তথ্য পূরণ করুন</p></div>
+<div class="section-heading"><h2>Candidate Information</h2><p>পরীক্ষার্থীর প্রয়োজনীয় তথ্য পূরণ করুন</p></div>
 <div class="meta">
 <div><label for="candidate">Candidate Name *</label><input id="candidate" placeholder="পরীক্ষার্থীর নাম" required></div>
 <div><label for="examiner">Examiner / Manager</label><input id="examiner" placeholder="পরীক্ষকের নাম"></div>
@@ -161,7 +160,7 @@ footer{border-top:1px solid #e1e8f0;background:#f8fafc}
 <button id="startBtn">Start Assessment&nbsp; →</button>
 </section>
 <section id="quiz" class="panel hidden">
-<div class="section-heading compact"><span class="section-index">02</span><h2>Knowledge Assessment</h2><p>প্রতিটি প্রশ্ন মনোযোগ দিয়ে পড়ুন এবং সঠিক উত্তর নির্বাচন করুন</p></div>
+<div class="section-heading compact"><h2>Knowledge Assessment</h2><p>প্রতিটি প্রশ্ন মনোযোগ দিয়ে পড়ুন এবং সঠিক উত্তর নির্বাচন করুন</p></div>
 <div class="toolbar"><div><span class="tag" id="countryTag"></span> <span class="small" id="answeredCount"></span></div><strong id="timer">45:00</strong></div>
 <div class="progress"><span id="progressBar"></span></div>
 <div class="qtop"><span id="qNumber"></span><span>প্রতি প্রশ্নে ১ নম্বর</span></div>
@@ -170,13 +169,13 @@ footer{border-top:1px solid #e1e8f0;background:#f8fafc}
 <div class="actions"><button class="secondary" id="prevBtn">← Previous</button><button id="nextBtn">Next →</button><button class="danger hidden" id="submitBtn">Submit Test</button></div>
 </section>
 <section id="result" class="panel hidden">
-<div class="section-heading compact"><span class="section-index">03</span><h2>Performance Summary</h2><p>পরীক্ষার সামগ্রিক ফলাফল</p></div><div class="result"><div class="score" id="scoreText">0/50</div><div id="resultStatus"></div><p id="candidateResult"></p></div>
+<div class="section-heading compact"><h2>Performance Summary</h2><p>পরীক্ষার সামগ্রিক ফলাফল</p></div><div class="result"><div class="score" id="scoreText">0/50</div><div id="resultStatus"></div><p id="candidateResult"></p></div>
 <div class="stats" style="justify-content:center"><span class="stat">Answered: <b id="answeredResult"></b></span><span class="stat">Correct: <b id="correctResult"></b></span><span class="stat">Wrong: <b id="wrongResult"></b></span><span class="stat">Time used: <b id="timeUsed"></b></span></div>
 <div class="actions no-print"><button id="printBtn" class="secondary">Print Result</button><button id="newBtn">New Candidate</button></div>
 <div class="subsection-heading"><span></span><h3>Detailed Answer Review</h3><span></span></div><details open><summary>Manager Answer Key & Review</summary><div style="overflow-x:auto"><table><thead><tr><th>No.</th><th>Country</th><th>Candidate Answer</th><th>Correct Answer</th><th>Result</th><th>Explanation</th></tr></thead><tbody id="reviewBody"></tbody></table></div></details>
 </section>
 <section class="panel revision-panel" id="revision">
-<div class="section-heading"><span class="section-index">04</span><h2>Revision Library</h2><p>Sweden ও Norway-এর প্রশ্ন, সঠিক উত্তর এবং ব্যাখ্যা</p></div>
+<div class="section-heading"><h2>Revision Library</h2><p>Sweden ও Norway-এর প্রশ্ন, সঠিক উত্তর এবং ব্যাখ্যা</p></div>
 <div id="revisionContent" class="revision-swipe-area"></div>
 </section>
 </main>
