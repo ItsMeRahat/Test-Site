@@ -194,7 +194,7 @@ function buildRevision(){
    return `<article class="revision-item"><p class="revision-question"><span class="revision-number">Q${q.index+1}.</span>${q.question}</p><p class="revision-answer">সঠিক উত্তর: ${q.answer}. ${correct}</p><p class="revision-explanation">${q.explanation}</p></article>`;
   }).join("")}</div>`;
  }).join("");
- root.innerHTML=`<nav class="revision-nav">${nav}</nav><p class="revision-swipe-hint">দেশ পরিবর্তন করতে বাটনে চাপুন অথবা ডানে-বামে Swipe করুন ↔</p>${content}`;
+ root.innerHTML=`<nav class="revision-nav">${nav}</nav><p class="revision-swipe-hint" style="white-space:nowrap!important;display:block;width:100%;max-width:100%;font-size:clamp(8px,2.2vw,12px);text-align:center;overflow:hidden;margin:0 0 12px">দেশ বদলাতে বাটনে চাপুন অথবা Swipe করুন ↔</p>${content}`;
  let active=0,startX=0;
  const show=i=>{
   active=(i+groups.length)%groups.length;
