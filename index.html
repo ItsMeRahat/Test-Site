@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sweden and Norway New Student Counsellor assessment test">
+<title>Sweden & Norway | Counsellor Assessment</title>
+<style>
+:root{--navy:#17365d;--blue:#1f4e78;--bg:#f3f6fb;--line:#dce4ef;--text:#172334;--muted:#64748b;--green:#16834a;--red:#c0392b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 Arial,"Noto Sans Bengali",sans-serif}
+header{background:linear-gradient(120deg,#142b4d,#245b89);color:#fff;padding:28px 18px}
+.wrap{max-width:1000px;margin:auto;padding:0 16px}
+h1{font-size:clamp(22px,4vw,32px);margin:0 0 6px}header p{margin:0;color:#dce8f5}
+main{padding:22px 0 50px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 4px 18px #17365d0b}
+.meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+label{display:block;font-weight:700;font-size:13px;margin-bottom:6px}
+input{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}.stat{background:#edf3f9;border-radius:8px;padding:8px 12px;font-size:13px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.progress{height:8px;background:#e7edf5;border-radius:20px;overflow:hidden;margin:14px 0}.progress span{display:block;height:100%;width:0;background:#2e75a8;transition:width .2s}
+.qtop{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:13px}
+.question{font-size:18px;font-weight:700;margin:12px 0 18px}
+.option{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);padding:12px;border-radius:9px;margin:9px 0;cursor:pointer}
+.option:hover{border-color:#7ba6ce;background:#f7fbff}.option input{width:auto;margin-top:4px;accent-color:var(--blue)}
+.actions{display:flex;gap:10px;justify-content:space-between;margin-top:18px;flex-wrap:wrap}
+button{border:0;border-radius:8px;padding:11px 18px;font:700 14px inherit;cursor:pointer;background:var(--blue);color:#fff}
+button.secondary{background:#e8eef5;color:#20344d}button.danger{background:#a83232}button:disabled{opacity:.45;cursor:not-allowed}
+.hidden{display:none!important}.result{text-align:center}.score{font-size:48px;font-weight:800;color:var(--navy)}
+.pass{color:var(--green);font-weight:800}.fail{color:var(--red);font-weight:800}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf3f9}
+details{margin-top:14px}summary{cursor:pointer;font-weight:700;color:var(--blue)}
+.small{color:var(--muted);font-size:12px}.tag{display:inline-block;background:#e8eff7;color:#25496d;border-radius:20px;padding:3px 9px;font-size:12px}
+@media(max-width:600px){.meta{grid-template-columns:1fr}.panel{padding:15px}.question{font-size:16px}.actions button{flex:1}}
+@media print{header,.no-print,#setup,#quiz,.no-print{display:none!important}body{background:#fff}.panel{box-shadow:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Sweden & Norway</h1><p>New Student Counsellor | Manager Assessment Test</p></div></header>
+<main class="wrap">
+<section id="setup" class="panel">
+<h2 style="margin-top:0">পরীক্ষার্থীর তথ্য</h2>
+<div class="meta">
+<div><label for="candidate">Candidate Name *</label><input id="candidate" placeholder="পরীক্ষার্থীর নাম" required></div>
+<div><label for="examiner">Examiner / Manager</label><input id="examiner" placeholder="পরীক্ষকের নাম"></div>
+</div>
+<div class="stats"><span class="stat">সময়: <b>৩০ মিনিট</b></span><span class="stat">প্রশ্ন: <b>৩০টি</b></span><span class="stat">মোট নম্বর: <b>৩০</b></span><span class="stat">Pass Mark: <b>২১ (৭০%)</b></span></div>
+<p class="small">প্রতিটি প্রশ্নে একটি সঠিক উত্তর নির্বাচন করুন। পরীক্ষা জমা দেওয়ার আগে উত্তর পরিবর্তন করা যাবে।</p>
+<button id="startBtn">Start Test</button>
+</section>
+<section id="quiz" class="panel hidden">
+<div class="toolbar"><div><span class="tag" id="countryTag"></span> <span class="small" id="answeredCount"></span></div><strong id="timer">30:00</strong></div>
+<div class="progress"><span id="progressBar"></span></div>
+<div class="qtop"><span id="qNumber"></span><span>প্রতি প্রশ্নে ১ নম্বর</span></div>
+<div class="question" id="questionText"></div>
+<div id="options"></div>
+<div class="actions"><button class="secondary" id="prevBtn">← Previous</button><button id="nextBtn">Next →</button><button class="danger hidden" id="submitBtn">Submit Test</button></div>
+</section>
+<section id="result" class="panel hidden">
+<div class="result"><h2>পরীক্ষার ফলাফল</h2><div class="score" id="scoreText">0/30</div><div id="resultStatus"></div><p id="candidateResult"></p></div>
+<div class="stats" style="justify-content:center"><span class="stat">Answered: <b id="answeredResult"></b></span><span class="stat">Correct: <b id="correctResult"></b></span><span class="stat">Wrong: <b id="wrongResult"></b></span><span class="stat">Time used: <b id="timeUsed"></b></span></div>
+<div class="actions no-print"><button id="printBtn" class="secondary">Print Result</button><button id="newBtn">New Candidate</button></div>
+<details open><summary>Manager Answer Key & Review</summary><div style="overflow-x:auto"><table><thead><tr><th>No.</th><th>Country</th><th>Candidate Answer</th><th>Correct Answer</th><th>Result</th><th>Explanation</th></tr></thead><tbody id="reviewBody"></tbody></table></div></details>
+</section>
+<section class="panel">
+<h3 style="margin-top:0">Assessment Guidelines</h3>
+<ul><li>ভর্তি, GPA/CGPA, English requirement ও deadline সম্পর্কে official source যাচাইয়ের দক্ষতা মূল্যায়ন করা হবে।</li><li>কোনো university বা programme-এর admission, scholarship বা visa নিশ্চিত বলে প্রতিশ্রুতি দেওয়া যাবে না।</li><li>প্রতিটি live application-এর আগে সংশ্লিষ্ট প্রতিষ্ঠানের সর্বশেষ official page যাচাই করতে হবে।</li></ul>
+<p class="small">Prepared for internal counsellor assessment. Review official university and government requirements before advising applicants.</p>
+</section>
+</main>
+<script>
+const QUESTIONS = [{"country": "Sweden", "question": "বাংলাদেশি শিক্ষার্থীর Bachelor’s eligibility যাচাইয়ে কোনটি সঠিক?", "options": ["শুধু SSC যথেষ্ট", "HSC সাধারণ যোগ্যতার ভিত্তি; ২০০৯-এর পর পাশ করলে Mathematics-এ উত্তীর্ণ হওয়া প্রয়োজন", "শুধু IELTS থাকলেই হবে", "সব বিশ্ববিদ্যালয়ে 3.00 CGPA বাধ্যতামূলক"], "answer": "B", "explanation": "University Admissions-এর Bangladesh country instructions-এ HSC এবং ২০০৯-এর পর Mathematics শর্ত উল্লেখিত।"}, {"country": "Sweden", "question": "বাংলাদেশ থেকে Master’s-এ আবেদনের সাধারণ শিক্ষাগত যোগ্যতা কোনটি?", "options": ["২ বছরের ডিপ্লোমা", "৩ বছরের যেকোনো Bachelor’s", "সাধারণত ৪ বছরের Bachelor’s অথবা Bachelor’s + Master’s মিলিয়ে ৪ বছর", "শুধু HSC"], "answer": "C", "explanation": "Bangladesh-এর Master’s country instructions অনুসরণ করতে হবে; নির্দিষ্ট ব্যতিক্রম থাকতে পারে।"}, {"country": "Sweden", "question": "সবার জন্য Sweden-এ একটি নির্দিষ্ট national CGPA cutoff আছে কি?", "options": ["হ্যাঁ, 2.50", "হ্যাঁ, 3.00", "না; programme-specific requirements ও selection criteria প্রযোজ্য", "হ্যাঁ, 3.50"], "answer": "C", "explanation": "একক national numeric cutoff নেই; programme page যাচাই জরুরি।"}, {"country": "Sweden", "question": "Sweden-এর কেন্দ্রীয় university application portal কোনটি?", "options": ["UCAS", "UniversityAdmissions.se", "Søknadsweb", "Common App"], "answer": "B", "explanation": "UniversityAdmissions.se হলো কেন্দ্রীয় আবেদন পোর্টাল।"}, {"country": "Sweden", "question": "CGPA conversion সম্পর্কে counsellor-এর সঠিক পরামর্শ কী?", "options": ["সব শিক্ষার্থীর CGPA 3.00-কে Swedish C বলা", "Official conversion/assessment ছাড়া CGPA convert না করা", "সব ক্ষেত্রে 2.50 বলা", "শুধু percentage দেখে সিদ্ধান্ত"], "answer": "B", "explanation": "বিদেশি grading system অনুমান করে convert করা যাবে না।"}, {"country": "Sweden", "question": "Chalmers-এর Master’s admission-এ CGPA সম্পর্কে কোনটি সঠিক?", "options": ["সব programme-এ fixed 3.00 cutoff", "একক minimum CGPA cutoff নেই; overall application strength বিবেচিত হয়", "শুধু IELTS লাগে", "শুধু work experience লাগে"], "answer": "B", "explanation": "Chalmers-এর official guidance অনুযায়ী fixed minimum CGPA নেই।"}, {"country": "Sweden", "question": "KTH Master’s selection-এ কোন বিষয়গুলো গুরুত্বপূর্ণ?", "options": ["শুধু বয়স", "শুধু bank statement", "Academic merits, programme fit ও motivation-সহ merit assessment", "শুধু passport"], "answer": "C", "explanation": "KTH merit rating ও একাধিক academic/application factor বিবেচনা করে।"}, {"country": "Sweden", "question": "English requirement যাচাইয়ের সঠিক পদ্ধতি কী?", "options": ["সব বিশ্ববিদ্যালয়ে IELTS 5.5 বলা", "প্রতিটি programme-এর accepted test, score ও exemption official page-এ দেখা", "MOI সব জায়গায় নিশ্চিত waiver", "English proof লাগে না"], "answer": "B", "explanation": "English requirements programme ও University Admissions-এর নিয়ম অনুযায়ী যাচাই করতে হবে।"}, {"country": "Sweden", "question": "শিক্ষার্থী IELTS-এর বদলে MOI দিতে চাইলে কী বলবে?", "options": ["MOI সর্বত্র গ্রহণযোগ্য", "MOI কখনো গ্রহণযোগ্য নয়", "নির্দিষ্ট university/programme-এ waiver আছে কি না officialভাবে যাচাই করতে হবে", "নিজে থেকে waiver নিশ্চিত করবে"], "answer": "C", "explanation": "MOI waiver সর্বজনীন নয়।"}, {"country": "Sweden", "question": "Application documents জমা দেওয়ার ক্ষেত্রে কোনটি সবচেয়ে গুরুত্বপূর্ণ?", "options": ["শুধু WhatsApp ছবি", "Official country instructions অনুযায়ী academic, identity ও English documents সময়মতো জমা", "শুধু CV", "শুধু recommendation"], "answer": "B", "explanation": "Country-specific document instructions ও deadline মানতে হবে।"}, {"country": "Sweden", "question": "Programme বাছাইয়ের আগে কী যাচাই করা উচিত?", "options": ["শুধু শহরের আবহাওয়া", "Subject prerequisites, degree eligibility, English, tuition ও deadline", "শুধু ranking", "শুধু campus photo"], "answer": "B", "explanation": "প্রোগ্রামভিত্তিক যোগ্যতা, খরচ ও deadline যাচাই জরুরি।"}, {"country": "Sweden", "question": "৩ বছরের Bachelor’s নিয়ে Master’s eligibility জানতে চাইলে কী করবে?", "options": ["নিশ্চিত eligible বলবে", "নিশ্চিত ineligible বলবে", "Bangladesh country instructions ও degree/field exception মিলিয়ে official assessment করবে", "CGPA 3.5 হলেই eligible বলবে"], "answer": "C", "explanation": "কিছু নির্দিষ্ট ৩ বছরের honours degree বিবেচিত হতে পারে; blanket answer নয়।"}, {"country": "Sweden", "question": "Admission ও residence permit সম্পর্কে সঠিক বক্তব্য কোনটি?", "options": ["Admission হলেই permit নিশ্চিত", "Admission ও residence permit আলাদা প্রক্রিয়া; permit-এর শর্ত আলাদা", "ভিসা লাগে না", "Offer letter-ই যথেষ্ট"], "answer": "B", "explanation": "Admission এবং Migration Agency-এর permit process পৃথক।"}, {"country": "Sweden", "question": "Tuition fee সম্পর্কে counsellor-এর সঠিক আচরণ কী?", "options": ["সব university-তে একই fee বলা", "Official programme/university fee page থেকে fee ও payment schedule যাচাই", "Facebook post দেখা", "নিজে fee অনুমান"], "answer": "B", "explanation": "Tuition programme ও institution অনুযায়ী ভিন্ন।"}, {"country": "Sweden", "question": "CGPA কম, কিন্তু published minimum নেই—কীভাবে পরামর্শ দেবে?", "options": ["ভর্তি নিশ্চিত করবে", "অবশ্যই reject বলবে", "Eligibility ও competitive selection আলাদা করে বুঝিয়ে সতর্ক পরামর্শ দেবে", "CGPA বাড়িয়ে লিখতে বলবে"], "answer": "C", "explanation": "Minimum eligibility পূরণ admission guarantee নয়।"}, {"country": "Norway", "question": "Norway-তে Bachelor’s eligibility যাচাইয়ের প্রধান framework কোনটি?", "options": ["UCAS", "GSU list/country-specific higher education entrance qualification", "Common App", "শুধু IELTS"], "answer": "B", "explanation": "Norway-এর GSU country requirements গুরুত্বপূর্ণ।"}, {"country": "Norway", "question": "Norway-তে Master’s admission-এর সাধারণ academic ভিত্তি কী?", "options": ["HSC", "Relevant Bachelor’s degree ও programme-specific prerequisites", "শুধু diploma", "শুধু work experience"], "answer": "B", "explanation": "Relevant bachelor-level qualification প্রয়োজন।"}, {"country": "Norway", "question": "Norwegian grading scale-এ C সাধারণত কী?", "options": ["সর্বোচ্চ grade", "অনেক Master’s-এ ব্যবহৃত minimum benchmark/মাঝারি মানের grade", "Fail", "IELTS score"], "answer": "B", "explanation": "অনেক প্রতিষ্ঠানে Norwegian C বা equivalent benchmark ব্যবহৃত হয়।"}, {"country": "Norway", "question": "UiT-এর Master’s grade requirement সম্পর্কে কোনটি সঠিক?", "options": ["সব programme-এ একই 2.0", "অনেক programme-এ C (2.5 ECTS); কিছুতে 3.0 বা ভিন্ন নিয়ম", "কোনো grade লাগে না", "সব Bangladesh CGPA সরাসরি 2.5"], "answer": "B", "explanation": "UiT-তে programme অনুযায়ী grade threshold বদলাতে পারে; ECTS সরাসরি Bangladesh CGPA নয়।"}, {"country": "Norway", "question": "NTNU-র অনেক international Master’s programme-এর সাধারণ grade benchmark কী?", "options": ["Norwegian C বা equivalent", "শুধু ৫০%", "IELTS 6.0 হলেই", "Bachelor’s লাগে না"], "answer": "A", "explanation": "NTNU guidance-এ অনেক programme-এ Norwegian C/equivalent উল্লেখ আছে।"}, {"country": "Norway", "question": "University of Oslo-তে foreign grades কীভাবে মূল্যায়িত হয়?", "options": ["সব দেশের CGPA-কে 4 দিয়ে ভাগ করে", "Foreign grades individual assessment হয়; programme-specific rules-ও দেখতে হয়", "শুধু class rank লাগে", "Transcript লাগে না"], "answer": "B", "explanation": "বিদেশি grading system individual assessment হয়।"}, {"country": "Norway", "question": "Norwegian C = Bangladesh CGPA 2.50/4.00 ধরে নেওয়া যাবে?", "options": ["হ্যাঁ, সবসময়", "না; official equivalence/individual assessment ছাড়া সরাসরি conversion নয়", "হ্যাঁ, শুধু private university", "শুধু IELTS থাকলে"], "answer": "B", "explanation": "Norwegian/ECTS grade সরাসরি Bangladesh CGPA-তে map করা উচিত নয়।"}, {"country": "Norway", "question": "English language requirement কীভাবে যাচাই করবে?", "options": ["সব জায়গায় IELTS 6.0", "প্রতিটি programme-এর accepted tests, minimum subscores ও exemption policy যাচাই", "MOI সর্বত্র গ্রহণযোগ্য", "English proof লাগে না"], "answer": "B", "explanation": "English requirements institution/programme অনুযায়ী ভিন্ন।"}, {"country": "Norway", "question": "Norway-তে Bachelor’s programme-এর language সম্পর্কে কী যাচাই জরুরি?", "options": ["সব Bachelor’s English-taught", "Programme language; অনেক Bachelor’s-এ Norwegian proficiency প্রয়োজন হতে পারে", "কোনো ভাষা লাগে না", "শুধু German লাগে"], "answer": "B", "explanation": "Language of instruction ও Norwegian requirement programme page-এ যাচাই করতে হবে।"}, {"country": "Norway", "question": "Application deadline সম্পর্কে সঠিক বক্তব্য কোনটি?", "options": ["সব বিশ্ববিদ্যালয়ে একই deadline", "Applicant category ও programme অনুযায়ী deadline আলাদা হতে পারে", "শুধু August-এ apply", "Deadline নেই"], "answer": "B", "explanation": "International/non-EU applicant-এর deadline আলাদা বা আগের হতে পারে।"}, {"country": "Norway", "question": "Tuition fee সম্পর্কে সঠিক পরামর্শ কী?", "options": ["সব non-EU student-এর tuition সবসময় free", "বর্তমান institution/programme fee ও exemption policy যাচাই", "সবাই একই 10,000 euro দেয়", "শুধু living cost দিতে হয়"], "answer": "B", "explanation": "Fee policy প্রতিষ্ঠান ও বর্তমান নিয়ম অনুযায়ী যাচাই করতে হবে।"}, {"country": "Norway", "question": "Bachelor’s subject Master’s programme-এর সঙ্গে সম্পর্কহীন হলে কী করবে?", "options": ["CGPA বেশি হলেই eligible বলবে", "Required subject credits/prerequisites মিলিয়ে দেখবে", "শুধু IELTS দেখবে", "কোনো সমস্যা নেই বলবে"], "answer": "B", "explanation": "Relevant subject background ও credit prerequisites গুরুত্বপূর্ণ।"}, {"country": "Norway", "question": "শিক্ষার্থী Norwegian C benchmark পূরণ করলে এর অর্থ কী?", "options": ["Admission guaranteed", "Minimum threshold পূরণ হতে পারে; selection ও programme-specific requirements বাকি", "Residence permit নিশ্চিত", "Scholarship নিশ্চিত"], "answer": "B", "explanation": "Minimum grade পূরণ admission guarantee নয়।"}, {"country": "Both", "question": "Official source ছাড়া scholarship amount বা visa success guarantee দেওয়া কি ঠিক?", "options": ["হ্যাঁ, enrolment বাড়াতে", "না; guarantee নয়, official conditions ও uncertainty স্পষ্ট করতে হবে", "শুধু verbal guarantee", "WhatsApp-এ guarantee"], "answer": "B", "explanation": "Counselling-এ factual ও transparent advice জরুরি।"}, {"country": "Both", "question": "Student profile যাচাইয়ের সময় কোন তথ্যগুলো আগে সংগ্রহ করা উচিত?", "options": ["শুধু নাম ও ফোন", "Target level, subject, academic history/CGPA, graduation year, English score, budget ও intake", "শুধু passport number", "শুধু Facebook profile"], "answer": "B", "explanation": "Eligibility matching-এর জন্য পূর্ণ academic ও study-plan profile প্রয়োজন।"}];
+let answers = Array(QUESTIONS.length).fill("");
+let current = 0, remaining = 1800, timerId = null, startedAt = null, submitted = false;
+const $ = id => document.getElementById(id);
+function render(){
+ const q=QUESTIONS[current]; $("countryTag").textContent=q.country;
+ $("qNumber").textContent=`Question ${current+1} of ${QUESTIONS.length}`;
+ $("questionText").textContent=q.question;
+ $("options").innerHTML=q.options.map((o,i)=>`<label class="option"><input type="radio" name="answer" value="${"ABCD"[i]}" ${answers[current]==="ABCD"[i]?"checked":""}><span><b>${"ABCD"[i]}.</b> ${o}</span></label>`).join("");
+ $("options").querySelectorAll("input").forEach(el=>el.addEventListener("change",e=>{answers[current]=e.target.value;updateProgress()}));
+ $("prevBtn").disabled=current===0;
+ $("nextBtn").classList.toggle("hidden",current===QUESTIONS.length-1);
+ $("submitBtn").classList.toggle("hidden",current!==QUESTIONS.length-1);
+ updateProgress();
+}
+function updateProgress(){
+ const n=answers.filter(Boolean).length;
+ $("answeredCount").textContent=`Answered ${n}/${QUESTIONS.length}`;
+ $("progressBar").style.width=`${(n/QUESTIONS.length)*100}%`;
+}
+function start(){
+ if(!$("candidate").value.trim()){alert("Candidate Name লিখুন।");$("candidate").focus();return}
+ $("setup").classList.add("hidden");$("quiz").classList.remove("hidden");startedAt=Date.now();render();
+ timerId=setInterval(()=>{remaining--;const m=String(Math.floor(remaining/60)).padStart(2,"0"),s=String(remaining%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;if(remaining<=0)finish()},1000);
+}
+function finish(){
+ if(submitted)return;submitted=true;clearInterval(timerId);
+ const correct=QUESTIONS.filter((q,i)=>answers[i]===q.answer).length;
+ const answered=answers.filter(Boolean).length,wrong=answered-(QUESTIONS.filter((q,i)=>answers[i]===q.answer).length);
+ $("quiz").classList.add("hidden");$("result").classList.remove("hidden");
+ $("scoreText").textContent=`${correct}/${QUESTIONS.length}`;
+ $("resultStatus").innerHTML=correct>=21?'<span class="pass">PASS</span>':'<span class="fail">NEEDS IMPROVEMENT</span>';
+ $("candidateResult").textContent=`Candidate: ${$("candidate").value} | Examiner: ${$("examiner").value||"—"}`;
+ $("answeredResult").textContent=answered;$("correctResult").textContent=correct;$("wrongResult").textContent=wrong;
+ const elapsed=Math.min(1800,Math.floor((Date.now()-startedAt)/1000));$("timeUsed").textContent=`${Math.floor(elapsed/60)}m ${elapsed%60}s`;
+ $("reviewBody").innerHTML=QUESTIONS.map((q,i)=>`<tr><td>${i+1}</td><td>${q.country}</td><td>${answers[i]||"—"}</td><td>${q.answer}</td><td style="font-weight:bold;color:${answers[i]===q.answer?"#16834a":"#c0392b"}">${answers[i]===q.answer?"Correct":"Wrong / Blank"}</td><td>${q.explanation}</td></tr>`).join("");
+}
+$("startBtn").addEventListener("click",start);
+$("prevBtn").addEventListener("click",()=>{if(current>0){current--;render()}});
+$("nextBtn").addEventListener("click",()=>{if(current<QUESTIONS.length-1){current++;render()}});
+$("submitBtn").addEventListener("click",()=>{if(confirm("আপনি কি পরীক্ষা জমা দিতে চান?"))finish()});
+$("printBtn").addEventListener("click",()=>window.print());
+$("newBtn").addEventListener("click",()=>location.reload());
+</script>
+</body>
+</html>
