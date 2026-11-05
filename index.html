@@ -200,6 +200,22 @@ header h1{font-size:clamp(30px,4.5vw,42px)!important;line-height:1.12}
 
 
 .revision-source{margin:8px 0 0;font-size:12px}.revision-source a{color:#2563a6;font-weight:750;text-decoration:none}.revision-source a:hover{text-decoration:underline}
+
+/* final desktop alignment fix: center the complete overview row */
+@media (min-width:601px){
+ #setup .stats.overview-stats{
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  width:100%;
+  gap:14px!important;
+ }
+ #setup .stats.overview-stats .stat{
+  flex:0 0 auto;
+  min-width:125px;
+  text-align:center!important;
+ }
+}
 </style>
 </head>
 <body>
