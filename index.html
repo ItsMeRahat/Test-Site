@@ -162,6 +162,18 @@ footer{border-top:1px solid #e1e8f0;background:#f8fafc}
   #setup .instruction-copy{padding:9px 6px;gap:3px;font-size:clamp(9px,2.25vw,12px)}
   #setup #startBtn{margin:12px auto 0;padding:11px 18px}
 }
+
+/* reduce oversized header whitespace on desktop and mobile */
+header{padding:28px 18px 30px!important}
+.header-kicker{margin-bottom:9px!important;font-size:10px;letter-spacing:2px}
+header h1{font-size:clamp(30px,4.5vw,42px)!important;line-height:1.12}
+.header-rule{margin-top:12px!important}
+@media(max-width:600px){
+ header{padding:18px 14px 20px!important}
+ .header-kicker{margin-bottom:7px!important;letter-spacing:1.5px}
+ header h1{font-size:clamp(27px,7vw,34px)!important}
+ .header-rule{margin-top:9px!important}
+}
 </style>
 </head>
 <body>
