@@ -174,6 +174,15 @@ header h1{font-size:clamp(30px,4.5vw,42px)!important;line-height:1.12}
  header h1{font-size:clamp(27px,7vw,34px)!important}
  .header-rule{margin-top:9px!important}
 }
+
+@media(max-width:600px){
+ #result .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ #result .stats .stat{text-align:center;padding:8px 5px;font-size:11px}
+ #result .result p{font-size:13px}
+ #result details{padding:9px}
+ #result table{font-size:11px;min-width:490px}
+ #result th,#result td{padding:7px 6px}
+}
 </style>
 </head>
 <body>
@@ -202,7 +211,7 @@ header h1{font-size:clamp(30px,4.5vw,42px)!important;line-height:1.12}
 <div class="section-heading compact"><h2>Performance Summary</h2><p>পরীক্ষার সামগ্রিক ফলাফল</p></div><div class="result"><div class="score" id="scoreText">0/50</div><div id="resultStatus"></div><p id="candidateResult"></p></div>
 <div class="stats" style="justify-content:center"><span class="stat">Answered: <b id="answeredResult"></b></span><span class="stat">Correct: <b id="correctResult"></b></span><span class="stat">Wrong: <b id="wrongResult"></b></span><span class="stat">Time used: <b id="timeUsed"></b></span></div>
 <div class="actions no-print"><button id="printBtn" class="secondary">Print Result</button><button id="newBtn">New Candidate</button></div>
-<div class="subsection-heading"><span></span><h3>Detailed Answer Review</h3><span></span></div><details open><summary>Manager Answer Key & Review</summary><div style="overflow-x:auto"><table><thead><tr><th>No.</th><th>Country</th><th>Candidate Answer</th><th>Correct Answer</th><th>Result</th><th>Explanation</th></tr></thead><tbody id="reviewBody"></tbody></table></div></details>
+<div class="subsection-heading"><span></span><h3>Detailed Answer Review</h3><span></span></div><details open><summary>Manager Answer Key & Review</summary><div style="overflow-x:auto"><table><thead><tr><th>No.</th><th>Candidate Answer</th><th>Correct Answer</th><th>Result</th><th>Explanation</th></tr></thead><tbody id="reviewBody"></tbody></table></div></details>
 </section>
 <section class="panel revision-panel" id="revision">
 <div class="section-heading"><h2>Revision Library</h2></div>
@@ -272,12 +281,12 @@ function finish(){
  const passMark=Math.ceil(QUESTIONS.length*0.7);
  const passFail=correct>=passMark?"PASS":"FAIL";
  $("resultStatus").innerHTML=correct>=passMark?'<span class="pass">PASS</span>':'<span class="fail">FAIL</span>';
- const resultPayload={candidate:$("candidate").value.trim(),score:`${correct}/${QUESTIONS.length}`,result:passFail};
+ const resultPayload={candidate:$("candidate").value.trim(),country:$("countrySelect").value,score:`${correct}/${QUESTIONS.length}`,result:passFail};
  fetch("https://script.google.com/macros/s/AKfycbwsT4qOJrDDF66UzgTU2ZneRzMrlFQYNQYdROVvADWVY_TNIuTaIjYflxk3DVHrv9ye/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:new URLSearchParams({payload:JSON.stringify(resultPayload)})}).catch(err=>console.error("Result submission failed:",err));
- $("candidateResult").textContent=`Candidate: ${$("candidate").value} | Examiner: ${$("examiner").value||"—"}`;
+ $("candidateResult").textContent=`Candidate: ${$("candidate").value} | Country: ${$("countrySelect").value}`;
  $("answeredResult").textContent=answered;$("correctResult").textContent=correct;$("wrongResult").textContent=wrong;
  const elapsed=Math.min(2700,Math.floor((Date.now()-startedAt)/1000));$("timeUsed").textContent=`${Math.floor(elapsed/60)}m ${elapsed%60}s`;
- $("reviewBody").innerHTML=QUESTIONS.map((q,i)=>`<tr><td>${i+1}</td><td>${q.country}</td><td>${answers[i]||"—"}</td><td>${q.answer}</td><td style="font-weight:bold;color:${answers[i]===q.answer?"#16834a":"#c0392b"}">${answers[i]===q.answer?"Correct":"Wrong / Blank"}</td><td>${q.explanation}</td></tr>`).join("");
+ $("reviewBody").innerHTML=QUESTIONS.map((q,i)=>`<tr><td>${i+1}</td><td>${answers[i]||"—"}</td><td>${q.answer}</td><td style="font-weight:bold;color:${answers[i]===q.answer?"#16834a":"#c0392b"}">${answers[i]===q.answer?"Correct":"Wrong / Blank"}</td><td>${q.explanation}</td></tr>`).join("");
 }
 $("startBtn").addEventListener("click",start);
 $("prevBtn").addEventListener("click",()=>{if(current>0){current--;render()}});
