@@ -345,6 +345,15 @@ function finish(){
 $("startBtn").addEventListener("click",start);
 $("prevBtn").addEventListener("click",()=>{if(current>0){current--;render()}});
 $("nextBtn").addEventListener("click",()=>{if(current<QUESTIONS.length-1){current++;render()}});
+document.addEventListener("keydown",e=>{
+ if(e.key!=="Enter"||$("quiz").classList.contains("hidden"))return;
+ const target=e.target;
+ if(!target||!target.closest||!target.closest("#options"))return;
+ if(!answers[current])return;
+ e.preventDefault();
+ if(current<QUESTIONS.length-1){current++;render();}
+ else if(confirm("আপনি শেষ প্রশ্নে আছেন। পরীক্ষা জমা দিতে চান?"))finish();
+});
 $("submitBtn").addEventListener("click",()=>{if(confirm("আপনি কি পরীক্ষা জমা দিতে চান?"))finish()});
 $("printBtn").addEventListener("click",()=>window.print());
 $("newBtn").addEventListener("click",()=>{clearSavedProgress();location.reload()});
