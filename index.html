@@ -235,7 +235,10 @@ function finish(){
  const answered=answers.filter(Boolean).length,wrong=answered-(QUESTIONS.filter((q,i)=>answers[i]===q.answer).length);
  $("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("revision").classList.remove("hidden");
  $("scoreText").textContent=`${correct}/${QUESTIONS.length}`;
- $("resultStatus").innerHTML=correct>=35?'<span class="pass">PASS</span>':'<span class="fail">NEEDS IMPROVEMENT</span>';
+ const passFail=correct>=35?"PASS":"FAIL";
+ $("resultStatus").innerHTML=correct>=35?'<span class="pass">PASS</span>':'<span class="fail">FAIL</span>';
+ const resultPayload={candidate:$("candidate").value.trim(),score:`${correct}/${QUESTIONS.length}`,result:passFail};
+ fetch("https://script.google.com/macros/s/AKfycbwsT4qOJrDDF66UzgTU2ZneRzMrlFQYNQYdROVvADWVY_TNIuTaIjYflxk3DVHrv9ye/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:new URLSearchParams({payload:JSON.stringify(resultPayload)})}).catch(err=>console.error("Result submission failed:",err));
  $("candidateResult").textContent=`Candidate: ${$("candidate").value} | Examiner: ${$("examiner").value||"—"}`;
  $("answeredResult").textContent=answered;$("correctResult").textContent=correct;$("wrongResult").textContent=wrong;
  const elapsed=Math.min(2700,Math.floor((Date.now()-startedAt)/1000));$("timeUsed").textContent=`${Math.floor(elapsed/60)}m ${elapsed%60}s`;
