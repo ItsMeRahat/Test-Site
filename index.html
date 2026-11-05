@@ -194,13 +194,13 @@ header h1{font-size:clamp(30px,4.5vw,42px)!important;line-height:1.12}
 <div><label for="candidate">Candidate Name *</label><input id="candidate" placeholder="পরীক্ষার্থীর নাম" required></div>
 <div><label for="countrySelect">Select Test Country *</label><select id="countrySelect" style="width:100%;padding:13px 14px;border:1px solid #d2dce8;border-radius:11px;background:#f9fbfe;font:inherit"><option value="Sweden">Sweden</option><option value="Norway">Norway</option><option value="Malaysia">Malaysia</option></select></div>
 </div>
-<div class="subsection-heading"><span></span><h3>Assessment Overview</h3><span></span></div><div class="stats overview-stats"><span class="stat">সময়: <b>৪৫ মিনিট</b></span><span class="stat">প্রশ্ন: <b>৪০টি</b></span><span class="stat">মোট নম্বর: <b>৪০</b></span></div>
+<div class="subsection-heading"><span></span><h3>Assessment Overview</h3><span></span></div><div class="stats overview-stats"><span class="stat">সময়: <b>৩০ মিনিট</b></span><span class="stat">প্রশ্ন: <b>৪০টি</b></span><span class="stat">মোট নম্বর: <b>৪০</b></span></div>
 <div class="subsection-heading"><span></span><h3>Instructions</h3><span></span></div><div class="instruction-copy"><span>প্রতিটি প্রশ্নে একটি সঠিক উত্তর নির্বাচন করুন।</span><span>জমা দেওয়ার আগে উত্তর পরিবর্তন করতে পারবেন।</span></div>
 <button id="startBtn">Start Assessment&nbsp; →</button>
 </section>
 <section id="quiz" class="panel hidden">
 <div class="section-heading compact"><h2>Knowledge Assessment</h2><p>প্রতিটি প্রশ্ন মনোযোগ দিয়ে পড়ুন এবং সঠিক উত্তর নির্বাচন করুন</p></div>
-<div class="toolbar"><div><span class="tag" id="countryTag"></span> <span class="small" id="answeredCount"></span></div><strong id="timer">45:00</strong></div>
+<div class="toolbar"><div><span class="tag" id="countryTag"></span> <span class="small" id="answeredCount"></span></div><strong id="timer">30:00</strong></div>
 <div class="progress"><span id="progressBar"></span></div>
 <div class="qtop"><span id="qNumber"></span><span>প্রতি প্রশ্নে ১ নম্বর</span></div>
 <div class="question" id="questionText"></div>
@@ -246,7 +246,7 @@ function buildRevision(){
 }
 buildRevision();
 let answers = Array(QUESTIONS.length).fill("");
-let current = 0, remaining = 2700, timerId = null, startedAt = null, submitted = false;
+let current = 0, remaining = 1800, timerId = null, startedAt = null, submitted = false;
 const $ = id => document.getElementById(id);
 function render(){
  const q=QUESTIONS[current]; $("countryTag").textContent=q.country;
@@ -267,7 +267,7 @@ function updateProgress(){
 function start(){
  const selectedCountry=$("countrySelect").value;
  QUESTIONS=ALL_QUESTIONS.filter(q=>q.country.startsWith(selectedCountry+" | "));
- answers=Array(QUESTIONS.length).fill("");current=0;remaining=2700;submitted=false;
+ answers=Array(QUESTIONS.length).fill("");current=0;remaining=1800;submitted=false;
  if(!$("candidate").value.trim()){alert("Candidate Name লিখুন।");$("candidate").focus();return}
  $("setup").classList.add("hidden");$("revision").classList.add("hidden");$("quiz").classList.remove("hidden");startedAt=Date.now();render();
  timerId=setInterval(()=>{remaining--;const m=String(Math.floor(remaining/60)).padStart(2,"0"),s=String(remaining%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;if(remaining<=0)finish()},1000);
@@ -285,7 +285,7 @@ function finish(){
  fetch("https://script.google.com/macros/s/AKfycbwsT4qOJrDDF66UzgTU2ZneRzMrlFQYNQYdROVvADWVY_TNIuTaIjYflxk3DVHrv9ye/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},body:new URLSearchParams({payload:JSON.stringify(resultPayload)})}).catch(err=>console.error("Result submission failed:",err));
  $("candidateResult").textContent=`Candidate: ${$("candidate").value} | Country: ${$("countrySelect").value}`;
  $("answeredResult").textContent=answered;$("correctResult").textContent=correct;$("wrongResult").textContent=wrong;
- const elapsed=Math.min(2700,Math.floor((Date.now()-startedAt)/1000));$("timeUsed").textContent=`${Math.floor(elapsed/60)}m ${elapsed%60}s`;
+ const elapsed=Math.min(1800,Math.floor((Date.now()-startedAt)/1000));$("timeUsed").textContent=`${Math.floor(elapsed/60)}m ${elapsed%60}s`;
  $("reviewBody").innerHTML=QUESTIONS.map((q,i)=>`<tr><td>${i+1}</td><td>${answers[i]||"—"}</td><td>${q.answer}</td><td style="font-weight:bold;color:${answers[i]===q.answer?"#16834a":"#c0392b"}">${!answers[i]?"Not Answered":answers[i]===q.answer?"Correct":"Wrong"}</td><td>${q.explanation}</td></tr>`).join("");
 }
 $("startBtn").addEventListener("click",start);
