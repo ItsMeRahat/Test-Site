@@ -250,11 +250,13 @@ function officialSourceFor(q){
 }
 function buildRevision(){
  const root=document.getElementById("revisionContent");
- const groups=[...new Set(REVISION_QUESTIONS.map(q=>q.country.split(" | ")[0]))];
- const nav=groups.map((country,i)=>`<button type="button" class="revision-jump ${i===0?"active":""}" data-country="${country.toLowerCase()}">${country} — ${REVISION_QUESTIONS.filter(q=>q.country.startsWith(country+" | ")).length} Questions</button>`).join("");
- const content=groups.map((country,i)=>{
-  const items=REVISION_QUESTIONS.map((q,index)=>({...q,index})).filter(q=>q.country.startsWith(country+" | "));
-  return `<div class="revision-group ${i===0?"active":""}" data-revision-country="${country.toLowerCase()}"><h3>${country}</h3>${items.map(q=>{
+ const groupKey=q=>q.country.includes(" | ")?q.country.split(" | ")[0]:q.country;
+ const groups=[...new Set(REVISION_QUESTIONS.map(groupKey))];
+ const groupItems=group=>REVISION_QUESTIONS.map((q,index)=>({...q,index})).filter(q=>groupKey(q)===group);
+ const nav=groups.map((group,i)=>`<button type="button" class="revision-jump ${i===0?"active":""}" data-country="${i}">${group} — ${groupItems(group).length} Questions</button>`).join("");
+ const content=groups.map((group,i)=>{
+  const items=groupItems(group);
+  return `<div class="revision-group ${i===0?"active":""}" data-revision-country="${i}"><h3>${group}</h3>${items.map(q=>{
    const correct=q.options["ABCD".indexOf(q.answer)];
    return `<article class="revision-item"><p class="revision-question"><span class="revision-number">Q${q.index+1}.</span>${q.question}</p><p class="revision-answer">সঠিক উত্তর: ${correct}</p><p class="revision-explanation">${q.explanation}</p><p class="revision-source"><a href="${officialSourceFor(q)}" target="_blank" rel="noopener noreferrer">Official Authority Source ↗</a></p></article>`;
   }).join("")}</div>`;
