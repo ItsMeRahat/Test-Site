@@ -27,7 +27,7 @@ button{border:0;border-radius:8px;padding:11px 18px;font:700 14px inherit;cursor
 button.secondary{background:#e8eef5;color:#20344d}button.danger{background:#a83232}button:disabled{opacity:.45;cursor:not-allowed}
 .hidden{display:none!important}.result{text-align:center}.score{font-size:48px;font-weight:800;color:var(--navy)}
 .pass{color:var(--green);font-weight:800}.fail{color:var(--red);font-weight:800}
-.revision-panel h2{margin-top:0}.revision-nav{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 22px}.revision-jump{display:inline-block;padding:10px 14px;border-radius:9px;background:#245b89;color:#fff;text-decoration:none;font-weight:700}.revision-group{scroll-margin-top:16px}.revision-group{margin-top:22px}.revision-group h3{padding:10px 12px;background:#edf3f9;border-radius:8px;color:var(--navy)}.revision-item{padding:14px 0;border-bottom:1px solid var(--line)}.revision-question{font-weight:700;margin:0 0 9px}.revision-answer{margin:0 0 6px;color:var(--green);font-weight:700}.revision-explanation{margin:0;color:var(--muted);font-size:14px;line-height:1.6}.revision-number{color:var(--muted);font-size:13px;margin-right:6px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf3f9}
+.revision-panel h2{margin-top:0}.revision-nav{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 22px}.revision-jump{border:1px solid #3b5876;background:#20252c;color:#fff;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer}.revision-jump.active{background:#245b89;border-color:#245b89}.revision-group{display:none}.revision-group.active{display:block}.revision-swipe-hint{font-size:12px;color:var(--muted);margin:0 0 12px}.revision-swipe-area{touch-action:pan-y}.revision-jump{display:inline-block;padding:10px 14px;border-radius:9px;background:#245b89;color:#fff;text-decoration:none;font-weight:700}.revision-group{scroll-margin-top:16px}.revision-group{margin-top:22px}.revision-group h3{padding:10px 12px;background:#edf3f9;border-radius:8px;color:var(--navy)}.revision-item{padding:14px 0;border-bottom:1px solid var(--line)}.revision-question{font-weight:700;margin:0 0 9px}.revision-answer{margin:0 0 6px;color:var(--green);font-weight:700}.revision-explanation{margin:0;color:var(--muted);font-size:14px;line-height:1.6}.revision-number{color:var(--muted);font-size:13px;margin-right:6px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#edf3f9}
 details{margin-top:14px}summary{cursor:pointer;font-weight:700;color:var(--blue)}
 .small{color:var(--muted);font-size:12px}.tag{display:inline-block;background:#e8eff7;color:#25496d;border-radius:20px;padding:3px 9px;font-size:12px}
 @media(max-width:600px){.meta{grid-template-columns:1fr}.panel{padding:15px}.question{font-size:16px}.actions button{flex:1}}
@@ -64,7 +64,7 @@ details{margin-top:14px}summary{cursor:pointer;font-weight:700;color:var(--blue)
 <section class="panel revision-panel" id="revision">
 <h2>Revision: Questions &amp; Answers</h2>
 <p class="small">পরীক্ষার সব প্রশ্ন, সঠিক উত্তর ও সংক্ষিপ্ত ব্যাখ্যা এক জায়গায় সাজানো হয়েছে।</p>
-<div id="revisionContent"></div>
+<div id="revisionContent" class="revision-swipe-area"></div>
 </section>
 </main>
 <footer style="text-align:center;padding:18px 12px;color:var(--muted);font-size:13px">Developed by Rahat</footer>
@@ -73,15 +73,24 @@ const QUESTIONS = [{"country":"Sweden | Application Process & Timeline","questio
 function buildRevision(){
  const root=document.getElementById("revisionContent");
  const groups=[...new Set(QUESTIONS.map(q=>q.country.split(" | ")[0]))];
- const nav=groups.map(country=>`<a class="revision-jump" href="#revision-${country.toLowerCase()}">${country} — ${QUESTIONS.filter(q=>q.country.startsWith(country+" | ")).length} Questions</a>`).join("");
- const content=groups.map(country=>{
-  const items=QUESTIONS.map((q,i)=>({...q,index:i})).filter(q=>q.country.startsWith(country+" | "));
-  return `<div class="revision-group" id="revision-${country.toLowerCase()}"><h3>${country}</h3>${items.map(q=>{
+ const nav=groups.map((country,i)=>`<button type="button" class="revision-jump ${i===0?"active":""}" data-country="${country.toLowerCase()}">${country} — ${QUESTIONS.filter(q=>q.country.startsWith(country+" | ")).length} Questions</button>`).join("");
+ const content=groups.map((country,i)=>{
+  const items=QUESTIONS.map((q,index)=>({...q,index})).filter(q=>q.country.startsWith(country+" | "));
+  return `<div class="revision-group ${i===0?"active":""}" data-revision-country="${country.toLowerCase()}"><h3>${country}</h3>${items.map(q=>{
    const correct=q.options["ABCD".indexOf(q.answer)];
    return `<article class="revision-item"><p class="revision-question"><span class="revision-number">Q${q.index+1}.</span>${q.question}</p><p class="revision-answer">সঠিক উত্তর: ${q.answer}. ${correct}</p><p class="revision-explanation">${q.explanation}</p></article>`;
   }).join("")}</div>`;
  }).join("");
- root.innerHTML=`<nav class="revision-nav">${nav}</nav>${content}`;
+ root.innerHTML=`<nav class="revision-nav">${nav}</nav><p class="revision-swipe-hint">দেশ পরিবর্তন করতে বাটনে চাপুন অথবা ডানে-বামে Swipe করুন ↔</p>${content}`;
+ let active=0,startX=0;
+ const show=i=>{
+  active=(i+groups.length)%groups.length;
+  root.querySelectorAll("[data-country]").forEach((el,n)=>el.classList.toggle("active",n===active));
+  root.querySelectorAll("[data-revision-country]").forEach((el,n)=>el.classList.toggle("active",n===active));
+ };
+ root.querySelectorAll("[data-country]").forEach((el,i)=>el.addEventListener("click",()=>show(i)));
+ root.addEventListener("touchstart",e=>{startX=e.changedTouches[0].screenX},{passive:true});
+ root.addEventListener("touchend",e=>{const dx=e.changedTouches[0].screenX-startX;if(Math.abs(dx)>55)show(active+(dx<0?1:-1))},{passive:true});
 }
 buildRevision();
 let answers = Array(QUESTIONS.length).fill("");
@@ -105,14 +114,14 @@ function updateProgress(){
 }
 function start(){
  if(!$("candidate").value.trim()){alert("Candidate Name লিখুন।");$("candidate").focus();return}
- $("setup").classList.add("hidden");$("quiz").classList.remove("hidden");startedAt=Date.now();render();
+ $("setup").classList.add("hidden");$("revision").classList.add("hidden");$("quiz").classList.remove("hidden");startedAt=Date.now();render();
  timerId=setInterval(()=>{remaining--;const m=String(Math.floor(remaining/60)).padStart(2,"0"),s=String(remaining%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;if(remaining<=0)finish()},1000);
 }
 function finish(){
  if(submitted)return;submitted=true;clearInterval(timerId);
  const correct=QUESTIONS.filter((q,i)=>answers[i]===q.answer).length;
  const answered=answers.filter(Boolean).length,wrong=answered-(QUESTIONS.filter((q,i)=>answers[i]===q.answer).length);
- $("quiz").classList.add("hidden");$("result").classList.remove("hidden");
+ $("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("revision").classList.remove("hidden");
  $("scoreText").textContent=`${correct}/${QUESTIONS.length}`;
  $("resultStatus").innerHTML=correct>=35?'<span class="pass">PASS</span>':'<span class="fail">NEEDS IMPROVEMENT</span>';
  $("candidateResult").textContent=`Candidate: ${$("candidate").value} | Examiner: ${$("examiner").value||"—"}`;
