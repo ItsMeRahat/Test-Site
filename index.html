@@ -264,16 +264,23 @@ function updateProgress(){
  $("answeredCount").textContent=`Answered ${n}/${QUESTIONS.length}`;
  $("progressBar").style.width=`${(n/QUESTIONS.length)*100}%`;
 }
+let refreshWarningActive = false;
+function beforeRefresh(e){
+ if(!refreshWarningActive || submitted) return;
+ e.preventDefault();
+ e.returnValue = "";
+}
+window.addEventListener("beforeunload",beforeRefresh);
 function start(){
  const selectedCountry=$("countrySelect").value;
  QUESTIONS=ALL_QUESTIONS.filter(q=>q.country.startsWith(selectedCountry+" | "));
  answers=Array(QUESTIONS.length).fill("");current=0;remaining=1800;submitted=false;
  if(!$("candidate").value.trim()){alert("Candidate Name লিখুন।");$("candidate").focus();return}
- $("setup").classList.add("hidden");$("revision").classList.add("hidden");$("quiz").classList.remove("hidden");startedAt=Date.now();render();
+ $("setup").classList.add("hidden");$("revision").classList.add("hidden");$("quiz").classList.remove("hidden");refreshWarningActive=true;startedAt=Date.now();render();
  timerId=setInterval(()=>{remaining--;const m=String(Math.floor(remaining/60)).padStart(2,"0"),s=String(remaining%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;if(remaining<=0)finish()},1000);
 }
 function finish(){
- if(submitted)return;submitted=true;clearInterval(timerId);
+ if(submitted)return;submitted=true;refreshWarningActive=false;clearInterval(timerId);
  const correct=QUESTIONS.filter((q,i)=>answers[i]===q.answer).length;
  const answered=answers.filter(Boolean).length,wrong=answered-(QUESTIONS.filter((q,i)=>answers[i]===q.answer).length);
  $("quiz").classList.add("hidden");$("result").classList.remove("hidden");$("revision").classList.remove("hidden");
